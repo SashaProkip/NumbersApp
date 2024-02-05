@@ -21,7 +21,7 @@ cd numbersapp
 ./gradlew installDebug
 ```
 
-##APK file
+## APK file
 You can download it [here](https://drive.google.com/file/d/1vDYfi6w03rcSKW85a4vNTNjTfVMcly7S/view?usp=sharing)
 
 ## Usage
