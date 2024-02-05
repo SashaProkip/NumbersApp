@@ -1,6 +1,7 @@
 package com.example.numbersapp.ui.presentation
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,11 +19,15 @@ import androidx.compose.ui.unit.sp
 import com.example.numbersapp.domain.model.Number
 
 @Composable
-fun NumberRowCard(number: Number) {
+fun NumberRowCard(
+    number: Number,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp),
+            .padding(4.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, Color.Black)
     ) {

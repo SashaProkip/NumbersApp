@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.numbersapp.ui.navigation.Screens
 import com.example.numbersapp.ui.viewmodel.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 
@@ -65,7 +66,9 @@ fun FirstScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
-                onClick = { viewModel.getInputNumber(text.text.toInt()) },
+                onClick = {
+                    if (text.text.isNotBlank()) viewModel.getInputNumber(text.text.toInt())
+                },
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = "Get Fact")
@@ -88,7 +91,12 @@ fun FirstScreen(
                 .weight(1f)
         ) {
             items(numbers) { number ->
-                NumberRowCard(number.numbers)
+                NumberRowCard(
+                    number = number.numbers,
+                    onClick = {
+                        navController.navigate(Screens.SecondScreen.route + "/${number.numbers.number}/${number.numbers.text}")
+                    }
+                )
             }
         }
     }
