@@ -43,7 +43,11 @@ fun FirstScreen(
     ) {
         TextField(
             value = text,
-            onValueChange = { text = it },
+            onValueChange = { newValue ->
+                if (newValue.text.isEmpty() || newValue.text.toIntOrNull() != null) {
+                    text = newValue
+                }
+            },
             singleLine = true,
             placeholder = {
                 Text(text = "Input number")
