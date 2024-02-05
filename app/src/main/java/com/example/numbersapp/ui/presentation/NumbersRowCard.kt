@@ -1,4 +1,4 @@
-package com.example.numbersapp.ui
+package com.example.numbersapp.ui.presentation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.example.numbersapp.ui
+package com.example.numbersapp.ui.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
