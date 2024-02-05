@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -20,6 +21,7 @@ import com.example.numbersapp.domain.model.Number
 import com.example.numbersapp.ui.state.MainState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,70 +29,52 @@ class MainViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
-    private val _mainState = MutableStateFlow(MainState())
+    private val _mainState = MutableStateFlow(MainState(
+        numbersList = repository.local.getAllData.toMutableList()
+    ))
     val mainState = _mainState.asStateFlow()
-
-    /** * ROOM * **/
-    val readNumbers: LiveData<List<NumbersEntity>> = repository.local.getAllData
 
     private fun insertNumber(numbersEntity: NumbersEntity) {
         viewModelScope.launch {
             repository.local.insertNumber(numbersEntity)
         }
-    }
-
-    fun deleteAll() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.local.deleteAll()
+        _mainState.update { state ->
+            val newList = listOf(numbersEntity) + state.numbersList
+            state.copy(
+                numbersList = newList
+            )
         }
     }
 
-    /** * Retrofit * **/
     val myResponse: MutableLiveData<Response<Number>> = MutableLiveData()
 
     fun getRandomNumber() {
         viewModelScope.launch {
-            getRandomNumberSafeCall()
-        }
-    }
-
-    fun getInputNumber(inputNumber: Int) {
-        viewModelScope.launch {
-            getInputNumberSafeCall(inputNumber)
-        }
-    }
-
-    private suspend fun getRandomNumberSafeCall() {
-        myResponse.value = Response.Loading()
-        if (true) {
+            myResponse.value = Response.Loading()
             val response = repository.remote.getRandomNumber()
             myResponse.value = handleNumberResponse(response)
 
             val number = myResponse.value!!.data
             if (number != null) {
-                offlineCache(number)
+                val numbersEntity = NumbersEntity(number)
+                insertNumber(numbersEntity)
             }
-
-        } else {
-            myResponse.value = Response.Error("No Internet Connection")
         }
     }
 
-    private suspend fun getInputNumberSafeCall(inputNumber: Int) {
-        myResponse.value = Response.Loading()
-        if (true) {
+    fun getInputNumber(inputNumber: Int) {
+        viewModelScope.launch {
+            myResponse.value = Response.Loading()
             val response = repository.remote.getInputNumber(inputNumber)
             myResponse.value = handleNumberResponse(response)
 
             val number = myResponse.value!!.data
             if (number != null) {
-                offlineCache(number)
+                val numbersEntity = NumbersEntity(number)
+                insertNumber(numbersEntity)
             }
-        } else {
-            myResponse.value = Response.Error("No Internet Connection")
         }
     }
-
 
     private fun handleNumberResponse(response: retrofit2.Response<com.example.numbersapp.domain.model.Number>): Response<com.example.numbersapp.domain.model.Number> {
         return when {
@@ -109,27 +93,4 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
-    private fun offlineCache(number: Number) {
-        val numbersEntity = NumbersEntity(number)
-        insertNumber(numbersEntity)
-    }
-
-    /** Internet **/
-    private fun hasInternetConnection(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-
-        return when {
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
-    }
-
 }

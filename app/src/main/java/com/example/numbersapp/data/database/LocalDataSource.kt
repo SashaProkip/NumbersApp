@@ -7,13 +7,13 @@ import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val numbersDao: NumbersDao) {
 
-    val getAllData: LiveData<List<NumbersEntity>> = numbersDao.getAllData()
+    val getAllData: List<NumbersEntity> = numbersDao.getAllData()
 
-    suspend fun insertNumber(numbersEntity: NumbersEntity) {
+    fun insertNumber(numbersEntity: NumbersEntity) {
         numbersDao.insertNumber(numbersEntity)
     }
 
-    suspend fun deleteAll() {
+    fun deleteAll() {
         numbersDao.deleteAll()
     }
 

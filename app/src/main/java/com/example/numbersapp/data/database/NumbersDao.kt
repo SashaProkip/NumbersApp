@@ -11,8 +11,8 @@ import com.example.numbersapp.domain.entity.NumbersEntity
 @Dao
 interface NumbersDao {
 
-    @Query("SELECT * FROM table_numbers ORDER BY id ASC")
-    fun getAllData(): LiveData<List<NumbersEntity>>
+    @Query("SELECT * FROM table_numbers ORDER BY id DESC")
+    fun getAllData(): List<NumbersEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNumber(numbersEntity: NumbersEntity)

@@ -9,15 +9,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,8 +31,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 fun FirstScreen(
     viewModel: MainViewModel = hiltViewModel()
 ) {
+    val state by viewModel.mainState.collectAsState()
     var text by remember { mutableStateOf(TextFieldValue()) }
-    val numbers = (1..10).toList()
+    val numbers = state.numbersList
     val scrollState = rememberLazyListState()
 
     Column(
@@ -40,6 +44,11 @@ fun FirstScreen(
         TextField(
             value = text,
             onValueChange = { text = it },
+            singleLine = true,
+            placeholder = {
+                Text(text = "Input number")
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp)
@@ -50,7 +59,7 @@ fun FirstScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
-                onClick = { /* TODO */ },
+                onClick = { viewModel.getInputNumber(text.text.toInt()) },
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = "Get Fact")
@@ -73,12 +82,7 @@ fun FirstScreen(
                 .weight(1f)
         ) {
             items(numbers) { number ->
-                Text(
-                    text = number.toString(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                )
+                NumberRowCard(number.numbers)
             }
         }
     }

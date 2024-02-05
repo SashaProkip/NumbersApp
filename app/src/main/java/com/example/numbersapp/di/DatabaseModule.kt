@@ -25,5 +25,7 @@ object DatabaseModule {
         context,
         NumbersDatabase::class.java,
         "table_numbers"
-    ).build()
+    ).allowMainThreadQueries()
+        .fallbackToDestructiveMigration()
+        .build()
 }

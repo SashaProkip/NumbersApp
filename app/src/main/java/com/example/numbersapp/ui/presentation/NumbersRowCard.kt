@@ -15,9 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.numbersapp.domain.model.Number
 
 @Composable
-fun NumberRowLayout() {
+fun NumberRowCard(number: Number) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,7 +32,7 @@ fun NumberRowLayout() {
                 .padding(8.dp)
         ) {
             Text(
-                text = "1",
+                text = number.number.toString(),
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp
@@ -42,7 +43,7 @@ fun NumberRowLayout() {
             )
 
             Text(
-                text = "description",
+                text = number.text,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier

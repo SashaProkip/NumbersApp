@@ -7,7 +7,7 @@ import com.example.numbersapp.domain.entity.NumbersEntity
 
 @Database(
     entities = [NumbersEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(NumbersTypeConverter::class)
