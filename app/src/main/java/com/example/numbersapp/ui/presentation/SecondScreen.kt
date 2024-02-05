@@ -11,16 +11,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Composable
-fun SecondScreen() {
+fun SecondScreen(
+    navController: NavHostController,
+    number: Int,
+    description: String
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         Text(
-            text = "1",
+            text = number.toString(),
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp
@@ -31,7 +36,7 @@ fun SecondScreen() {
         )
 
         Text(
-            text = "description",
+            text = description.toString(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)

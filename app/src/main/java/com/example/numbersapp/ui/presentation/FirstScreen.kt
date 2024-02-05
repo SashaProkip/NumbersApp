@@ -24,12 +24,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.numbersapp.ui.viewmodel.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun FirstScreen(
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
+    navController: NavHostController,
 ) {
     val state by viewModel.mainState.collectAsState()
     var text by remember { mutableStateOf(TextFieldValue()) }
